@@ -1,5 +1,6 @@
+# menu_tags.py
 from django import template
-from django.urls import resolve
+from django.utils.safestring import mark_safe
 from menu.models import Menu, MenuItem
 
 register = template.Library()
@@ -11,24 +12,31 @@ def draw_menu(context, menu_name):
     current_url = request.path
     menu = Menu.objects.get(name=menu_name)
     items = MenuItem.objects.filter(menu=menu).order_by('order')
-    return render_menu(items, current_url)
+    menu_html = render_menu(items, current_url)
+    return mark_safe(menu_html)  # Mark the HTML as safe
 
 
 def render_menu(items, current_url):
-    def render_item(item, current_url, level=0):
+    def render_item(item, current_url):
         child_items = items.filter(parent=item)
         is_active = item.get_absolute_url() == current_url
-        if is_active:
-            expanded = True
-        else:
-            expanded = any(child.get_absolute_url() == current_url for child in child_items)
+        expanded = is_active or any(child.get_absolute_url() == current_url for child in child_items)
 
-        html = f'<li class={"active" if is_active else ""}>'
+        classes = []
+        if is_active:
+            classes.append('active')
+        if child_items:
+            classes.append('has-children')
+            if expanded:
+                classes.append('expanded')
+
+        class_attr = f'class="{" ".join(classes)}"' if classes else ''
+        html = f'<li {class_attr}>'
         html += f'<a href="{item.get_absolute_url()}">{item.title}</a>'
         if child_items:
             html += '<ul>'
             for child in child_items:
-                html += render_item(child, current_url, level + 1)
+                html += render_item(child, current_url)
             html += '</ul>'
         html += '</li>'
         return html
