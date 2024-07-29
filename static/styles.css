@@ -8,12 +8,14 @@ body {
 nav {
     background-color: #333;
     padding: 10px;
+    position: relative;
 }
 
 .menu ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    position: relative;
 }
 
 .menu li {
@@ -39,6 +41,7 @@ nav {
     left: 0;
     top: 100%;
     background-color: #333;
+    z-index: 10;
 }
 
 /* Показ подменю первого уровня при наведении на родителя */
@@ -74,4 +77,9 @@ nav {
 .menu ul ul ul {
     top: 0;
     left: 100%;
+}
+
+.menu li.active > a {
+    background-color: lightgreen;
+    color: white;
 }
