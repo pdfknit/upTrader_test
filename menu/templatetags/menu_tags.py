@@ -1,6 +1,7 @@
 # menu_tags.py
 from django import template
 from django.utils.safestring import mark_safe
+from django.core.cache import cache
 from menu.models import Menu, MenuItem
 
 register = template.Library()
@@ -10,9 +11,13 @@ register = template.Library()
 def draw_menu(context, menu_name):
     request = context['request']
     current_url = request.path
-    menu = Menu.objects.get(name=menu_name)
-    items = MenuItem.objects.filter(menu=menu).order_by('order')
-    menu_html = render_menu(items, current_url)
+    cache_key = f'menu_{menu_name}_{current_url}'
+    menu_html = cache.get(cache_key)
+    if menu_html is None:
+        menu = Menu.objects.get(name=menu_name)
+        items = MenuItem.objects.filter(menu=menu).order_by('order')
+        menu_html = render_menu(items, current_url)
+        cache.set(cache_key, menu_html, timeout=60 * 15)
     return mark_safe(menu_html)  # Mark the HTML as safe
 
 
