@@ -1,0 +1,29 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            {% load menu_tags %}
+            <div class="menu">
+                {% draw_menu 'main_menu' %}
+            </div>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        <!-- Default content -->
+        {% endblock %}
+    </main>
+    <footer>
+        <p>Футер</p>
+    </footer>
+</body>
+</html>
