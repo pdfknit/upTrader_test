@@ -1,0 +1,85 @@
+/* Основные стили для меню */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #333;
+    padding: 10px;
+    position: relative;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.menu li {
+    position: relative;
+    display: inline-block; /* Горизонтальное размещение элементов меню */
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+}
+
+.menu a:hover {
+    background-color: #575757;
+}
+
+/* Скрытие всех подменю по умолчанию */
+.menu ul ul {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: #333;
+    z-index: 10;
+}
+
+/* Показ подменю первого уровня при наведении на родителя */
+.menu > ul > li:hover > ul {
+    display: block;
+}
+
+/* Показ подменю второго уровня при наведении на родителя второго уровня */
+.menu li:hover > ul > li:hover > ul {
+    display: block;
+    left: 100%; /* Размещение подменю справа от родителя второго уровня */
+    top: 0; /* Размещение подменю на одной линии с родителем второго уровня */
+}
+
+/* Показ подменю третьего уровня при наведении на родителя третьего уровня */
+.menu li ul ul li:hover > ul {
+    display: block;
+    left: 100%; /* Размещение подменю дальше справа */
+    top: 0; /* Размещение подменю на одной линии с родителем третьего уровня */
+}
+
+/* Общие стили для всех подменю */
+.menu li ul li {
+    display: block;
+}
+
+/* Стили для горизонтального меню */
+.menu > ul {
+    white-space: nowrap; /* Предотвращение переноса элементов на новую строку */
+}
+
+/* Дополнительные стили для подменю, чтобы они не пересекались с другими элементами */
+.menu ul ul ul {
+    top: 0;
+    left: 100%;
+}
+
+.menu li.active > a {
+    background-color: lightgreen;
+    color: white;
+}
